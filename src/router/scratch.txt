@@ -1,0 +1,27 @@
+    <div v-for="logger in sensors" :key="logger.id" v-bind:class="logger.pos.color" @click="displayDetails(logger.id)" class="card">
+      <div class="content">
+        <div class="ui header" v-bind:class="logger.pos.color">{{ (logger.pos !== undefined) ? logger.pos.cname : logger.id }}<span class="right floated meta">{{ logger.sampling|moment("HH:mm")}}</span></div>
+        <div class="meta"><span>{{ (logger.pos !== undefined) ? logger.id : "" }}</span>
+          <span class="right floated">On {{ logger.up_since | moment("from") }}</span>
+        </div>
+        <div class="footer">
+          <span><i class="thermometer half icon"></i>{{ logger.temperature.toFixed() || 0 }}&#8451;</span>
+          <span>&bullet; {{ logger.humidity.toFixed() }}%</span>
+          <span class="right floated"><i class="signal icon"></i> {{ logger.signal_quality }}/30</span>
+        </div>
+      </div>
+    </div>
+
+
+  computed: {
+    sortedPos () {
+      return this.locations.sort(function (a, b) {
+        if (b.logger && a.logger) {
+          if (b.logger.sampling < a.logger.sampling) return -1
+          if (b.logger.sampling > a.logger.sampling) return 1
+          return 0
+        }
+      })
+    }
+  },
+
